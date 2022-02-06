@@ -77,18 +77,18 @@ contract PayMyAPI {
 
     using ECDSA for bytes32;
 
-    function verifyMessage(string memory message, bytes memory signature)
-        public
-        view
-        returns (address, bool)
-    {
+    function verifyMessage(
+        string memory message,
+        address _address,
+        bytes memory signature
+    ) public pure returns (address, bool) {
         bytes32 messagehash = keccak256(bytes(message));
 
         address signeraddress = messagehash.toEthSignedMessageHash().recover(
             signature
         );
 
-        if (msg.sender == signeraddress) {
+        if (_address == signeraddress) {
             return (signeraddress, true);
         } else {
             return (signeraddress, false);
