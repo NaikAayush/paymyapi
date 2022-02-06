@@ -10,12 +10,13 @@ async function main() {
   // https://docs.chain.link/docs/link-token-contracts/#polygon-matic
   const link = "0x326C977E6efc84E512bB9C30f76E30c160eD06FB";
   // https://market.link/nodes/876ce1ee-d576-466e-8fd1-c2e85e13c60d/metrics?start=1643555946&end=1644160746
-  const oracle = "0x0bDDCD124709aCBf9BB3F824EbC61C87019888bb";
+
+  const oracle = "0xD67C2358A202eCFad7A9DF124a56e3d1efa478c4";
+
+  const jobId = "7bff13fe9dd34ed781827c3ee894e401";
 
   // every 5 mins
   const updateInterval = 300;
-
-  const jobId = "";
 
   // 0.1 * 10 ** 18
   const fee = "100000000000000000";

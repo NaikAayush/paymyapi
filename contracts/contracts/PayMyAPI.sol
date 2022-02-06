@@ -72,13 +72,15 @@ contract PayMyAPI is ChainlinkClient, KeeperCompatibleInterface {
     bytes32 public chainlinkJobId;
     uint256 public chainlinkFee;
 
+    address owner;
+
     constructor(
         ISuperfluid host,
         ISuperfluidToken token_,
         address link,
         address oracle,
         uint256 updateInterval,
-        bytes32 chainlinkJobId_,
+        string memory chainlinkJobId_,
         uint256 chainlinkFee_
     ) {
         //initialize InitData struct, and set equal to cfaV1
@@ -103,8 +105,46 @@ contract PayMyAPI is ChainlinkClient, KeeperCompatibleInterface {
         interval = updateInterval;
         lastTimeStamp = block.timestamp;
 
-        chainlinkJobId = chainlinkJobId_;
+        chainlinkJobId = stringToBytes32(chainlinkJobId_);
         chainlinkFee = chainlinkFee_;
+
+        owner = msg.sender;
+    }
+
+    modifier _ownerOnly() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function updateChainLinkJobId(string calldata chainlinkJobId_)
+        public
+        _ownerOnly
+    {
+        chainlinkJobId = stringToBytes32(chainlinkJobId_);
+    }
+
+    function updateChainLinkFee(uint256 chainlinkFee_) public _ownerOnly {
+        chainlinkFee = chainlinkFee_;
+    }
+
+//     function updateChainLinkInterval(uint256 updateInterval) public _ownerOnly {
+//         interval = updateInterval;
+//     }
+
+    function updateChainLinkToken(address link) public _ownerOnly {
+        setChainlinkToken(link);
+    }
+
+    function updateChainLinkOracle(address oracle) public _ownerOnly {
+        setChainlinkOracle(oracle);
+    }
+
+    function updateSuperfluidToken(ISuperfluidToken token_) public _ownerOnly {
+        token = token_;
+    }
+
+    function updateLastTimestamp(uint256 timestamp) public _ownerOnly {
+        lastTimeStamp = block.timestamp;
     }
 
     function addApi(string calldata message, string calldata url) public {
@@ -237,7 +277,9 @@ contract PayMyAPI is ChainlinkClient, KeeperCompatibleInterface {
         AteFromQuota(developer, user, count);
     }
 
-    function checkUpkeep(bytes calldata /* checkData */)
+    function checkUpkeep(
+        bytes calldata /* checkData */
+    )
         external
         view
         override
@@ -247,7 +289,9 @@ contract PayMyAPI is ChainlinkClient, KeeperCompatibleInterface {
         performData = "0x";
     }
 
-    function performUpkeep(bytes calldata /* performData */) external override {
+    function performUpkeep(
+        bytes calldata /* performData */
+    ) external override {
         lastTimeStamp = block.timestamp;
 
         uint256 numDevs = developers.length;
@@ -303,5 +347,21 @@ contract PayMyAPI is ChainlinkClient, KeeperCompatibleInterface {
         );
 
         return sendChainlinkRequest(request, chainlinkFee);
+    }
+
+    function stringToBytes32(string memory source)
+        private
+        pure
+        returns (bytes32 result)
+    {
+        bytes memory tempEmptyStringTest = bytes(source);
+        if (tempEmptyStringTest.length == 0) {
+            return 0x0;
+        }
+
+        assembly {
+            // solhint-disable-line no-inline-assembly
+            result := mload(add(source, 32))
+        }
     }
 }
