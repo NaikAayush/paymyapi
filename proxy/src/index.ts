@@ -13,12 +13,14 @@ const API_SERVICE_URL = process.env.API_SERVICE_URL;
 const RPC_URL = process.env.RPC_URL;
 const MESSAGE = process.env.MESSAGE;
 const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS as string;
+const DEVELOPER_PRIVATE_KEY = process.env.DEVELOPER_PRIVATE_KEY as string;
 
 const requestMap = new Map();
 const tokenMap = new Map();
 
 // Ethers setup
 const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+const developerKey = new ethers.Wallet(DEVELOPER_PRIVATE_KEY, provider);
 const contract = new ethers.Contract(
   CONTRACT_ADDRESS,
   PayMyAPI.abi as ContractInterface,
@@ -68,7 +70,7 @@ app.get("/paymyapi/usage/:address", (req, res) => {
   console.log("Checking usage", req.params.address);
   // TODO: make developer account configurable
   const user = "0x" + req.params.address;
-  res.send({ developer: "0xd8199B80f78FADF8e60e9F14631473378B0b3a96", user, count: requestMap.has(user) ? requestMap.get(user) : 0 });
+  res.send({ developer: developerKey.address, user, count: requestMap.has(user) ? requestMap.get(user) : 0 });
 });
 
 // Authorization
