@@ -25,7 +25,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm ">{{data.url}}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm ">{{data.plans.length}}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="#" class="text-slate-200 hover:text-slate-400">Edit</a>
+                                <a (click)="add()" class="text-slate-200 hover:text-slate-400 cursor-pointer">Edit</a>
                             </td>
                         </tr>
 
@@ -35,3 +35,4 @@
         </div>
     </div>
 </div>
+<app-dev-add-plan *ngIf="modal.addNewPlanModal"></app-dev-add-plan>

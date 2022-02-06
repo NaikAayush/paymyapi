@@ -17,6 +17,7 @@ import { ToastComponent } from './components/toast/toast.component';
 import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
 import { APOLLO_OPTIONS } from 'apollo-angular';
 import { DevApiListComponent } from './components/dev/dev-api-list/dev-api-list.component';
+import { DevAddPlanComponent } from './components/dev/dev-add-plan/dev-add-plan.component';
 
 function createApollo(): ApolloClientOptions<unknown> {
   return {
@@ -37,6 +38,7 @@ function createApollo(): ApolloClientOptions<unknown> {
     LoaderComponent,
     ToastComponent,
     DevApiListComponent,
+    DevAddPlanComponent,
   ],
   imports: [
     BrowserModule,
