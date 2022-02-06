@@ -4,6 +4,8 @@
 // Learn more: https://solidity.readthedocs.io/en/v0.5.10/layout-of-source-files.html#pragma
 pragma solidity >=0.8.9;
 
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+
 contract PayMyAPI {
     // TODO: events
 
@@ -73,13 +75,19 @@ contract PayMyAPI {
         subscriptions[msg.sender][developer].active = false;
     }
 
-    using ECDSA for bytes32; 
+    using ECDSA for bytes32;
 
-    function verifyMessage(string memory message, bytes memory signature) public view  returns(address, bool) {
-        bytes32 messagehash =  keccak256(bytes(message));
-       
-        address signeraddress = messagehash.toEthSignedMessageHash().recover(signature);
-              
+    function verifyMessage(string memory message, bytes memory signature)
+        public
+        view
+        returns (address, bool)
+    {
+        bytes32 messagehash = keccak256(bytes(message));
+
+        address signeraddress = messagehash.toEthSignedMessageHash().recover(
+            signature
+        );
+
         if (msg.sender == signeraddress) {
             return (signeraddress, true);
         } else {

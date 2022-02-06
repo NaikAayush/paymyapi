@@ -25,6 +25,7 @@
     "prettier-plugin-solidity": "^1.0.0-beta.19"
   },
   "dependencies": {
+    "@openzeppelin/contracts": "^4.4.2",
     "dotenv": "^16.0.0"
   }
 }
