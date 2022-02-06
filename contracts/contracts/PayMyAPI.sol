@@ -12,22 +12,28 @@ import {ISuperfluid, ISuperfluidToken} from "@superfluid-finance/ethereum-contra
 import {IConstantFlowAgreementV1} from "@superfluid-finance/ethereum-contracts/contracts/interfaces/agreements/IConstantFlowAgreementV1.sol";
 
 contract PayMyAPI {
+    event ApiAdded(address developer, string message, string url);
     event PlanAdded(
         address developer,
         int96 pricePerSecond,
         uint256 perMonthLimit,
-        uint256 perSecondLimit,
-        string message
+        uint256 perSecondLimit
     );
     event PlanDeactivated(address developer, uint256 planIndex);
     event Subscribed(address developer, address user, uint256 planIndex);
     event Unsubscribed(address developer, address user);
 
+    struct Api {
+        bool available;
+        string message;
+        string url;
+        Plan[] plans;
+    }
+
     struct Plan {
         int96 pricePerSecond;
         uint256 perMonthLimit;
         uint256 perSecondLimit;
-        string message;
         bool active;
     }
 
@@ -46,7 +52,7 @@ contract PayMyAPI {
     //      This list is not updated when unsubscribed.
     mapping(address => address[]) maybeSubscribedUsers;
 
-    mapping(address => Plan[]) apis;
+    mapping(address => Api) apis;
 
     // Superfluid
     using CFAv1Library for CFAv1Library.InitData;
@@ -71,43 +77,55 @@ contract PayMyAPI {
         token = token_;
     }
 
+    function addApi(string calldata message, string calldata url) public {
+        address developer = msg.sender;
+
+        Api storage api = apis[developer];
+        api.available = true;
+        api.message = message;
+        api.url = url;
+
+        emit ApiAdded(developer, message, url);
+    }
+
     function addPlan(
         int96 pricePerSecond,
         uint256 perMonthLimit,
-        uint256 perSecondLimit,
-        string calldata message
+        uint256 perSecondLimit
     ) public returns (uint256 planIndex) {
         address developer = msg.sender;
-        apis[developer].push(
-            Plan(pricePerSecond, perMonthLimit, perSecondLimit, message, true)
+
+        require(apis[developer].available, "API not setup yet");
+
+        apis[developer].plans.push(
+            Plan(pricePerSecond, perMonthLimit, perSecondLimit, true)
         );
 
         emit PlanAdded(
             developer,
             pricePerSecond,
             perMonthLimit,
-            perSecondLimit,
-            message
+            perSecondLimit
         );
 
-        return apis[developer].length;
+        return apis[developer].plans.length;
     }
 
     function deactivatePlan(uint256 index) public {
-        require(index < apis[msg.sender].length, "Invalid index");
-        apis[msg.sender][index].active = false;
+        require(index < apis[msg.sender].plans.length, "Invalid index");
+        apis[msg.sender].plans[index].active = false;
 
         emit PlanDeactivated(msg.sender, index);
     }
 
     function getPlans(address developer) public view returns (Plan[] memory) {
-        return apis[developer];
+        return apis[developer].plans;
     }
 
     function subscribe(address developer, uint256 planId) public {
-        require(planId < apis[developer].length, "Invalid plan ID");
+        require(planId < apis[developer].plans.length, "Invalid plan ID");
 
-        Plan memory plan = apis[developer][planId];
+        Plan memory plan = apis[developer].plans[planId];
 
         require(plan.active, "Trying to subscribe to a deactivated plan");
 
