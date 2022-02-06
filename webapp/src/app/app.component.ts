@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { EthersService } from './services/ethers/ethers.service';
+import { TheGraphService } from './services/the-graph/the-graph.service';
 
 @Component({
   selector: 'app-root',
@@ -12,24 +13,14 @@ export class AppComponent implements OnInit {
 
   constructor(
     private ethersService: EthersService,
-    private readonly apollo: Apollo
+    private readonly graph: TheGraphService
   ) {}
   // async ngOnInit() {
   //   // await this.ethersService.initEthers();
   //   // await this.ethersService.signMessage('hi');
   // }
-  ngOnInit(): void {
-    this.apollo
-      .query({
-        query: gql`
-          {
-            hello(id: "123") {
-              name
-            }
-            bye
-          }
-        `,
-      })
-      .subscribe(console.log);
+  async ngOnInit() {
+    // const add: string = await this.ethersService.getAddress();
+    // console.log(await this.graph.getAPIs(add.toLowerCase()));
   }
 }

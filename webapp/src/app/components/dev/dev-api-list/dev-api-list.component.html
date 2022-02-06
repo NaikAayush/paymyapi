@@ -1,0 +1,37 @@
+<div class="dark:text-white text-3xl font-bold p-8 pl-2">
+    My APIs
+</div>
+<div class="flex flex-col">
+    <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+            <div class="shadow overflow-hidden sm:rounded-lg">
+                <table class="min-w-full">
+                    <thead class="bg-gray-50 dark:bg-slate-700 dark:text-gray-400 h-16">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-sm font-medium  uppercase tracking-wider">Owner Address</th>
+                            <th scope="col" class="px-6 py-3 text-left text-sm font-medium  uppercase tracking-wider">Available</th>
+                            <th scope="col" class="px-6 py-3 text-left text-sm font-medium  uppercase tracking-wider">Secret Message</th>
+                            <th scope="col" class="px-6 py-3 text-left text-sm font-medium  uppercase tracking-wider">URL</th>
+                            <th scope="col" class="px-6 py-3 text-left text-sm font-medium  uppercase tracking-wider">Plans</th>
+                            <th scope="col" class="px-6 py-3 text-left text-sm font-medium  uppercase tracking-wider">Edit Plans</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-white dark:bg-slate-600 dark:text-gray-200 h-16">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ">{{data.owner}}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm ">{{data.available}}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm ">{{data.message}}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm ">{{data.url}}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm ">{{data.plans.length}}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="#" class="text-slate-200 hover:text-slate-400">Edit</a>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

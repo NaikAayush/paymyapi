@@ -16,10 +16,11 @@ import { ToastComponent } from './components/toast/toast.component';
 
 import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
 import { APOLLO_OPTIONS } from 'apollo-angular';
+import { DevApiListComponent } from './components/dev/dev-api-list/dev-api-list.component';
 
 function createApollo(): ApolloClientOptions<unknown> {
   return {
-    uri: 'http://localhost:4000/graphql',
+    uri: 'https://api.thegraph.com/subgraphs/name/naikaayush/paymyapi',
     cache: new InMemoryCache(),
   };
 }
@@ -35,6 +36,7 @@ function createApollo(): ApolloClientOptions<unknown> {
     DevAddApiModalComponent,
     LoaderComponent,
     ToastComponent,
+    DevApiListComponent,
   ],
   imports: [
     BrowserModule,
