@@ -1,0 +1,24 @@
+# type ExampleEntity @entity {
+#   id: ID!
+#   count: BigInt!
+#   developer: Bytes! # address
+#   message: String! # string
+# }
+
+type ApiRecord @entity {
+  id: ID!
+  owner: String!
+  available: Boolean!
+  message: String!
+  url: String!
+  plans: [PlanRecord!]!
+}
+
+type PlanRecord @entity {
+  id: ID!
+  owner: String!
+  pricePerSecond: BigInt!
+  perMonthLimit: BigInt!
+  perSecondLimit: BigInt!
+  active: Boolean!
+}
