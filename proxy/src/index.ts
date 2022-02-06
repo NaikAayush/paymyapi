@@ -67,7 +67,8 @@ function logToken(token: string) {
 app.get("/paymyapi/usage/:address", (req, res) => {
   console.log("Checking usage", req.params.address);
   // TODO: make developer account configurable
-  res.send({ developer: "0xd8199B80f78FADF8e60e9F14631473378B0b3a96", user: req.params.address, count: requestMap.has(req.params.address) ? requestMap.get(req.params.address) : 0 });
+  const user = "0x" + req.params.address;
+  res.send({ developer: "0xd8199B80f78FADF8e60e9F14631473378B0b3a96", user, count: requestMap.has(user) ? requestMap.get(user) : 0 });
 });
 
 // Authorization
