@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  contractAddress: '0x6580F8943F77B219C829E0B5f0b722e07408b6A6',
+  contractAddress: '0x7b4051F1F0e4E4ee2c1502Da61eC6eaB65816CFF',
 };
 
 /*
