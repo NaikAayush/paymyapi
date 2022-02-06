@@ -31,6 +31,14 @@ export class EthersService {
     return accounts.length > 0;
   }
 
+  async getAddress() {
+    const accounts = await this.provider.listAccounts();
+    if (accounts.length > 0) {
+      this.initEthers();
+      return accounts[0];
+    }
+  }
+
   async signMessage(message: string) {
     let messageHash = ethers.utils.solidityKeccak256(['string'], [message]);
     const signature = await this.signer?.signMessage(
