@@ -127,9 +127,9 @@ contract PayMyAPI is ChainlinkClient, KeeperCompatibleInterface {
         chainlinkFee = chainlinkFee_;
     }
 
-//     function updateChainLinkInterval(uint256 updateInterval) public _ownerOnly {
-//         interval = updateInterval;
-//     }
+    //     function updateChainLinkInterval(uint256 updateInterval) public _ownerOnly {
+    //         interval = updateInterval;
+    //     }
 
     function updateChainLinkToken(address link) public _ownerOnly {
         setChainlinkToken(link);
@@ -208,15 +208,23 @@ contract PayMyAPI is ChainlinkClient, KeeperCompatibleInterface {
         );
         maybeSubscribedUsers[developer].push(msg.sender);
 
-        cfaV1.createFlow(developer, token, plan.pricePerSecond);
+        // cfaV1.createFlow(developer, token, plan.pricePerSecond);
 
         emit Subscribed(developer, msg.sender, planId);
+    }
+
+    function isSubscribed(address developer, address user)
+        public
+        view
+        returns (bool)
+    {
+        return subscriptions[user][developer].active;
     }
 
     function unsubscribe(address developer) public {
         subscriptions[msg.sender][developer].active = false;
 
-        cfaV1.deleteFlow(msg.sender, developer, token);
+        // cfaV1.deleteFlow(msg.sender, developer, token);
 
         emit Unsubscribed(developer, msg.sender);
     }
