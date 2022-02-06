@@ -22,3 +22,25 @@ type PlanRecord @entity {
   perSecondLimit: BigInt!
   active: Boolean!
 }
+
+type StatusRecord @entity {
+  id: ID!
+  owner: String!
+  user: String!
+  remainingQuota: BigInt!
+  planId: BigInt!
+  active: Boolean!
+}
+
+type Subscriptions @entity {
+  id: ID!
+  owner: String!
+  subscribers: [UserSubscription!]!
+}
+
+type UserSubscription @entity {
+  id: ID!
+  user: String!
+  planIndex: BigInt!
+  status: StatusRecord!
+}
