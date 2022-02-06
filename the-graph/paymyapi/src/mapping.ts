@@ -42,7 +42,9 @@ export function handlePlanAdded(event: PlanAdded): void {
   if (apiRecord === null) {
     return;
   }
-  apiRecord.plans.push(planRecord.id);
+  let plans = apiRecord.plans;
+  plans.push(planRecord.id);
+  apiRecord.plans = plans;
   apiRecord.save();
 }
 
