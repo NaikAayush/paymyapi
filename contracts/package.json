@@ -25,7 +25,8 @@
     "prettier-plugin-solidity": "^1.0.0-beta.19"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.4.2",
+    "@openzeppelin/contracts": "^3.4.2-solc-0.7",
+    "@superfluid-finance/ethereum-contracts": "^1.0.0-rc.11",
     "dotenv": "^16.0.0"
   }
 }

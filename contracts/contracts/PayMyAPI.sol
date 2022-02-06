@@ -2,15 +2,19 @@
 
 // Specifies the version of Solidity, using semantic versioning.
 // Learn more: https://solidity.readthedocs.io/en/v0.5.10/layout-of-source-files.html#pragma
-pragma solidity >=0.8.9;
+pragma solidity >=0.7.0;
+pragma abicoder v2;
 
-import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/cryptography/ECDSA.sol";
+
+import {CFAv1Library} from "@superfluid-finance/ethereum-contracts/contracts/apps/CFAv1Library.sol";
+import {ISuperfluid, ISuperfluidToken} from "@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluid.sol";
+import {IConstantFlowAgreementV1} from "@superfluid-finance/ethereum-contracts/contracts/interfaces/agreements/IConstantFlowAgreementV1.sol";
 
 contract PayMyAPI {
-    // TODO: events
     event PlanAdded(
         address developer,
-        uint256 pricePerSecond,
+        int96 pricePerSecond,
         uint256 perMonthLimit,
         uint256 perSecondLimit,
         string message
@@ -20,7 +24,7 @@ contract PayMyAPI {
     event Unsubscribed(address developer, address user);
 
     struct Plan {
-        uint256 pricePerSecond;
+        int96 pricePerSecond;
         uint256 perMonthLimit;
         uint256 perSecondLimit;
         string message;
@@ -44,10 +48,31 @@ contract PayMyAPI {
 
     mapping(address => Plan[]) apis;
 
-    constructor() {}
+    // Superfluid
+    using CFAv1Library for CFAv1Library.InitData;
+    CFAv1Library.InitData public cfaV1;
+    ISuperfluidToken private token;
+
+    constructor(ISuperfluid host, ISuperfluidToken token_) {
+        //initialize InitData struct, and set equal to cfaV1
+        cfaV1 = CFAv1Library.InitData(
+            host,
+            IConstantFlowAgreementV1(
+                address(
+                    host.getAgreementClass(
+                        keccak256(
+                            "org.superfluid-finance.agreements.ConstantFlowAgreement.v1"
+                        )
+                    )
+                )
+            )
+        );
+
+        token = token_;
+    }
 
     function addPlan(
-        uint256 pricePerSecond,
+        int96 pricePerSecond,
         uint256 perMonthLimit,
         uint256 perSecondLimit,
         string calldata message
@@ -93,11 +118,15 @@ contract PayMyAPI {
         );
         maybeSubscribedUsers[developer].push(msg.sender);
 
+        cfaV1.createFlow(developer, token, plan.pricePerSecond);
+
         emit Subscribed(developer, msg.sender, planId);
     }
 
     function unsubscribe(address developer) public {
         subscriptions[msg.sender][developer].active = false;
+
+        cfaV1.deleteFlow(msg.sender, developer, token);
 
         emit Unsubscribed(developer, msg.sender);
     }
