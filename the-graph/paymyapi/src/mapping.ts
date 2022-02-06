@@ -36,6 +36,7 @@ export function handlePlanAdded(event: PlanAdded): void {
   planRecord.perMonthLimit = event.params.perMonthLimit;
   planRecord.perSecondLimit = event.params.perSecondLimit;
   planRecord.active = true;
+  planRecord.save();
   let owner = event.params.developer.toHexString();
   let apiRecord = ApiRecord.load(owner);
   if (apiRecord === null) {
@@ -43,7 +44,6 @@ export function handlePlanAdded(event: PlanAdded): void {
   }
   apiRecord.plans.push(planRecord.id);
   apiRecord.save();
-  planRecord.save();
 }
 
 export function handlePlanDeactivated(event: PlanDeactivated): void {
