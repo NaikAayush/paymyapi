@@ -8,11 +8,22 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 contract PayMyAPI {
     // TODO: events
+    event PlanAdded(
+        address developer,
+        uint256 pricePerSecond,
+        uint256 perMonthLimit,
+        uint256 perSecondLimit,
+        string message
+    );
+    event PlanDeactivated(address developer, uint256 planIndex);
+    event Subscribed(address developer, address user, uint256 planIndex);
+    event Unsubscribed(address developer, address user);
 
     struct Plan {
         uint256 pricePerSecond;
         uint256 perMonthLimit;
         uint256 perSecondLimit;
+        string message;
         bool active;
     }
 
@@ -38,18 +49,30 @@ contract PayMyAPI {
     function addPlan(
         uint256 pricePerSecond,
         uint256 perMonthLimit,
-        uint256 perSecondLimit
+        uint256 perSecondLimit,
+        string calldata message
     ) public returns (uint256 planIndex) {
         address developer = msg.sender;
         apis[developer].push(
-            Plan(pricePerSecond, perMonthLimit, perSecondLimit, true)
+            Plan(pricePerSecond, perMonthLimit, perSecondLimit, message, true)
         );
+
+        emit PlanAdded(
+            developer,
+            pricePerSecond,
+            perMonthLimit,
+            perSecondLimit,
+            message
+        );
+
         return apis[developer].length;
     }
 
     function deactivatePlan(uint256 index) public {
         require(index < apis[msg.sender].length, "Invalid index");
         apis[msg.sender][index].active = false;
+
+        emit PlanDeactivated(msg.sender, index);
     }
 
     function getPlans(address developer) public view returns (Plan[] memory) {
@@ -69,10 +92,14 @@ contract PayMyAPI {
             true
         );
         maybeSubscribedUsers[developer].push(msg.sender);
+
+        emit Subscribed(developer, msg.sender, planId);
     }
 
     function unsubscribe(address developer) public {
         subscriptions[msg.sender][developer].active = false;
+
+        emit Unsubscribed(developer, msg.sender);
     }
 
     using ECDSA for bytes32;
