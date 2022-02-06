@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { openCloseAnimation } from 'src/app/services/animation/animation.service';
+import { EthersService } from 'src/app/services/ethers/ethers.service';
 
 @Component({
   selector: 'app-auth-modal',
@@ -9,13 +10,16 @@ import { openCloseAnimation } from 'src/app/services/animation/animation.service
 })
 export class AuthModalComponent implements OnInit {
   modalShow: boolean = false;
-  constructor() {}
+  constructor(private ethersService: EthersService) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     setTimeout(() => {
       this.modalShow = true;
     }, 1000);
+    console.log(await this.ethersService.isLoggedIn());
   }
 
-  async login() {}
+  async login() {
+    this.ethersService.initEthers();
+  }
 }
