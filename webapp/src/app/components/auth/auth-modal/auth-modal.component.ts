@@ -13,10 +13,13 @@ export class AuthModalComponent implements OnInit {
   constructor(private ethersService: EthersService) {}
 
   async ngOnInit() {
-    setTimeout(() => {
-      this.modalShow = true;
-    }, 1000);
-    console.log(await this.ethersService.isLoggedIn());
+    if (await this.ethersService.isLoggedIn()) {
+      this.modalShow = false;
+    } else {
+      setTimeout(() => {
+        this.modalShow = true;
+      }, 1000);
+    }
   }
 
   async login() {
