@@ -22,6 +22,7 @@ contract PayMyAPI {
     event PlanDeactivated(address developer, uint256 planIndex);
     event Subscribed(address developer, address user, uint256 planIndex);
     event Unsubscribed(address developer, address user);
+    event AteFromQuota(address developer, address user, uint256 count);
 
     struct Api {
         bool available;
@@ -147,6 +148,11 @@ contract PayMyAPI {
         cfaV1.deleteFlow(msg.sender, developer, token);
 
         emit Unsubscribed(developer, msg.sender);
+    }
+
+    function eatFromQuota(address user, uint256 count) public {
+        subscriptions[user][msg.sender].remainingQuota -= count;
+        AteFromQuota(msg.sender, user, count);
     }
 
     using ECDSA for bytes32;
