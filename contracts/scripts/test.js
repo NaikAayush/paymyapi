@@ -10,13 +10,13 @@ async function main() {
   const message = "hello there";
   const url = "http://142.93.209.22:3000";
 
-  const resp1 = await contract.addApi(message, url);
-  console.log("add api", resp1);
-  await resp1.wait();
+  // const resp1 = await contract.addApi(message, url);
+  // console.log("add api", resp1);
+  // await resp1.wait();
 
-  const resp2 = await contract.addPlan(1, 10000, 10);
-  console.log("add plan", resp2);
-  await resp2.wait();
+  // const resp2 = await contract.addPlan(1, 10000, 10);
+  // console.log("add plan", resp2);
+  // await resp2.wait();
 
   // const resp3 = await contract.subscribe(account.address, 0);
   // console.log("subscribe", resp3);
