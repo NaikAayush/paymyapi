@@ -42,6 +42,7 @@ export function handlePlanAdded(event: PlanAdded): void {
     return;
   }
   apiRecord.plans.push(planRecord.id);
+  apiRecord.save();
   planRecord.save();
 }
 
