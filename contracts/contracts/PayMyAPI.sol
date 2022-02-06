@@ -11,7 +11,10 @@ import {CFAv1Library} from "@superfluid-finance/ethereum-contracts/contracts/app
 import {ISuperfluid, ISuperfluidToken} from "@superfluid-finance/ethereum-contracts/contracts/interfaces/superfluid/ISuperfluid.sol";
 import {IConstantFlowAgreementV1} from "@superfluid-finance/ethereum-contracts/contracts/interfaces/agreements/IConstantFlowAgreementV1.sol";
 
-contract PayMyAPI {
+import "@chainlink/contracts/src/v0.7/KeeperCompatible.sol";
+import "@chainlink/contracts/src/v0.7/ChainlinkClient.sol";
+
+contract PayMyAPI is ChainlinkClient, KeeperCompatibleInterface {
     event ApiAdded(address developer, string message, string url);
     event PlanAdded(
         address developer,
@@ -53,14 +56,31 @@ contract PayMyAPI {
     //      This list is not updated when unsubscribed.
     mapping(address => address[]) maybeSubscribedUsers;
 
+    // developer address -> API details
     mapping(address => Api) apis;
+    // list of all developers
+    address[] developers;
 
     // Superfluid
     using CFAv1Library for CFAv1Library.InitData;
     CFAv1Library.InitData public cfaV1;
     ISuperfluidToken private token;
 
-    constructor(ISuperfluid host, ISuperfluidToken token_) {
+    // chainlink
+    uint256 public immutable interval;
+    uint256 public lastTimeStamp;
+    bytes32 public chainlinkJobId;
+    uint256 public chainlinkFee;
+
+    constructor(
+        ISuperfluid host,
+        ISuperfluidToken token_,
+        address link,
+        address oracle,
+        uint256 updateInterval,
+        bytes32 chainlinkJobId_,
+        uint256 chainlinkFee_
+    ) {
         //initialize InitData struct, and set equal to cfaV1
         cfaV1 = CFAv1Library.InitData(
             host,
@@ -76,6 +96,15 @@ contract PayMyAPI {
         );
 
         token = token_;
+
+        // chainlink
+        setChainlinkToken(link);
+        setChainlinkOracle(oracle);
+        interval = updateInterval;
+        lastTimeStamp = block.timestamp;
+
+        chainlinkJobId = chainlinkJobId_;
+        chainlinkFee = chainlinkFee_;
     }
 
     function addApi(string calldata message, string calldata url) public {
@@ -85,6 +114,8 @@ contract PayMyAPI {
         api.available = true;
         api.message = message;
         api.url = url;
+
+        developers.push(developer);
 
         emit ApiAdded(developer, message, url);
     }
@@ -178,5 +209,99 @@ contract PayMyAPI {
         } else {
             return (signeraddress, false);
         }
+    }
+
+    using Chainlink for Chainlink.Request;
+
+    event RequestFulfilled(
+        bytes32 indexed requestId,
+        address developer,
+        address user,
+        uint256 count
+    );
+
+    function fulfillRequest(
+        bytes32 requestId,
+        address developer,
+        address user,
+        uint256 count
+    ) public recordChainlinkFulfillment(requestId) {
+        emit RequestFulfilled(requestId, developer, user, count);
+
+        require(
+            subscriptions[user][developer].remainingQuota >= count,
+            "Not enough remaining quota!"
+        );
+
+        subscriptions[user][developer].remainingQuota -= count;
+        AteFromQuota(developer, user, count);
+    }
+
+    function checkUpkeep(bytes calldata /* checkData */)
+        external
+        view
+        override
+        returns (bool upkeepNeeded, bytes memory performData)
+    {
+        upkeepNeeded = (block.timestamp - lastTimeStamp) > interval;
+        performData = "0x";
+    }
+
+    function performUpkeep(bytes calldata /* performData */) external override {
+        lastTimeStamp = block.timestamp;
+
+        uint256 numDevs = developers.length;
+        for (uint256 i = 0; i < numDevs; i += 1) {
+            address developer = developers[i];
+            uint256 numUsers = maybeSubscribedUsers[developer].length;
+            for (uint256 j = 0; j < numUsers; j += 1) {
+                address user = maybeSubscribedUsers[developer][j];
+
+                if (subscriptions[user][developer].active) {
+                    requestUpdate(developer, user);
+                }
+            }
+        }
+    }
+
+    function toAsciiString(address x) internal pure returns (string memory) {
+        bytes memory s = new bytes(40);
+        for (uint256 i = 0; i < 20; i++) {
+            bytes1 b = bytes1(uint8(uint256(uint160(x)) / (2**(8 * (19 - i)))));
+            bytes1 hi = bytes1(uint8(b) / 16);
+            bytes1 lo = bytes1(uint8(b) - 16 * uint8(hi));
+            s[2 * i] = char(hi);
+            s[2 * i + 1] = char(lo);
+        }
+        return string(s);
+    }
+
+    function char(bytes1 b) internal pure returns (bytes1 c) {
+        if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
+        else return bytes1(uint8(b) + 0x57);
+    }
+
+    function requestUpdate(address developer, address user)
+        public
+        returns (bytes32 requestId)
+    {
+        Chainlink.Request memory request = buildChainlinkRequest(
+            chainlinkJobId,
+            address(this),
+            this.fulfillRequest.selector
+        );
+
+        request.add(
+            "get",
+            string(
+                abi.encodePacked(
+                    apis[developer].url,
+                    "/paymyapi/usage/",
+                    toAsciiString(user)
+                )
+            )
+        );
+
+        return sendChainlinkRequest(request, chainlinkFee);
     }
 }
