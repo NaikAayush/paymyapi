@@ -5,7 +5,7 @@ async function main() {
 
   const PayMyAPI = await ethers.getContractFactory("PayMyAPI");
 
-  const contract = await PayMyAPI.attach("0x7b4051F1F0e4E4ee2c1502Da61eC6eaB65816CFF");
+  const contract = await PayMyAPI.attach("0xDDfCc45148E0c76d781c0eA6ac455Bf06465a394");
 
   const jobId = "3b1a29fb0ff64b1bae019c244ad251cd";
 

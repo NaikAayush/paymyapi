@@ -13,7 +13,7 @@ async function main() {
 
   const oracle = "0xD67C2358A202eCFad7A9DF124a56e3d1efa478c4";
 
-  const jobId = "7bff13fe9dd34ed781827c3ee894e401";
+  const jobId = "3b1a29fb0ff64b1bae019c244ad251cd";
 
   // every 5 mins
   const updateInterval = 300;
