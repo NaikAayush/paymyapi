@@ -14,6 +14,9 @@ const RPC_URL = process.env.RPC_URL;
 const MESSAGE = process.env.MESSAGE;
 const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS as string;
 
+const requestMap = new Map();
+const tokenMap = new Map();
+
 // Ethers setup
 const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
 const contract = new ethers.Contract(
@@ -28,18 +31,42 @@ async function checkAuth(header: string) {
   const headerArray = headerString.split(":");
   const address = headerArray[0];
   const signature = headerArray[1];
-  try {
-    const res = await contract.verifyMessage(MESSAGE, address, signature);
-    if (res[1] == true) {
-      return true;
+
+  if (tokenMap.has(header)) {
+    logRequest(address);
+    return true;
+  } else {
+    try {
+      const res = await contract.verifyMessage(MESSAGE, address, signature);
+      if (res[1] == true) {
+        logToken(header);
+        logRequest(address);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return false;
     }
-    return false;
-  } catch (error) {
-    return false;
   }
 }
 
-// TODO: Log Request
+// Log Request
+function logRequest(address: string) {
+  if (requestMap.has(address)) {
+    requestMap.set(address, requestMap.get(address) + 1);
+  } else {
+    requestMap.set(address, 1);
+  }
+}
+
+// Log Request
+function logToken(token: string) {
+  tokenMap.set(token, true);
+}
+
+app.get("/usage/:address", (req, res) => {
+  res.send({ usage: requestMap.get(req.params.address) });
+});
 
 // Authorization
 app.use("", async (req, res, next) => {
