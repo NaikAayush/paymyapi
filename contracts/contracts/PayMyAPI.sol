@@ -151,6 +151,11 @@ contract PayMyAPI {
     }
 
     function eatFromQuota(address user, uint256 count) public {
+        require(
+            subscriptions[user][msg.sender].remainingQuota >= count,
+            "Not enough remaining quota!"
+        );
+
         subscriptions[user][msg.sender].remainingQuota -= count;
         AteFromQuota(msg.sender, user, count);
     }
