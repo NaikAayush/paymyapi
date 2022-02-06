@@ -4,7 +4,8 @@
   "description": "Ethereum Smart Contracts for Pay My API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "prettier --write 'contracts/**/*.sol'"
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,9 @@
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.4",
     "ethers": "^5.5.4",
-    "hardhat": "^2.8.3"
+    "hardhat": "^2.8.3",
+    "prettier": "^2.5.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.19"
   },
   "dependencies": {
     "dotenv": "^16.0.0"
