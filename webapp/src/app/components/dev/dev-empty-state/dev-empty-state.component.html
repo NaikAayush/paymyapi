@@ -2,10 +2,10 @@
     <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
     </svg>
-    <h3 class="mt-2 text-sm font-medium dark:text-white text-gray-900">No APIs</h3>
-    <p class="mt-1 text-sm text-gray-500">Get started by creating a new API.</p>
+    <h3 class="mt-2 text-xl font-medium dark:text-white text-gray-900">No APIs</h3>
+    <p class="mt-1 text-base text-gray-500">Get started by creating a new API.</p>
     <div class="mt-6">
-        <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+        <button (click)="addNew()" type="button" class="justify-center rounded-xl border border-transparent shadow-sm px-6 py-3 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 sm:col-start-2 sm:text-sm inline-flex items-center">
             <!-- Heroicon name: solid/plus -->
             <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
@@ -14,3 +14,4 @@
         </button>
     </div>
 </div>
+<app-dev-add-api-modal @openCloseAnimation *ngIf="modal.addNewAPIModal"></app-dev-add-api-modal>
