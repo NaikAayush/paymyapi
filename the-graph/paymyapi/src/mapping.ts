@@ -36,6 +36,12 @@ export function handlePlanAdded(event: PlanAdded): void {
   planRecord.perMonthLimit = event.params.perMonthLimit;
   planRecord.perSecondLimit = event.params.perSecondLimit;
   planRecord.active = true;
+  let owner = event.params.developer.toHexString();
+  let apiRecord = ApiRecord.load(owner);
+  if (apiRecord === null) {
+    return;
+  }
+  apiRecord.plans.push(planRecord.id);
   planRecord.save();
 }
 
@@ -65,9 +71,9 @@ export function handleSubscribed(event: Subscribed): void {
   if (apiRecord === null) {
     return;
   }
-  let planRecord = PlanRecord.load(apiRecord.plans[
-    event.params.planIndex.toI32()
-  ]);
+  let planRecord = PlanRecord.load(
+    apiRecord.plans[event.params.planIndex.toI32()]
+  );
   if (planRecord === null) {
     return;
   }
