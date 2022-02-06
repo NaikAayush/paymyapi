@@ -1,0 +1,39 @@
+specVersion: 0.0.2
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: PayMyAPI
+    network: mumbai
+    source:
+      address: "0x6580F8943F77B219C829E0B5f0b722e07408b6A6"
+      abi: PayMyAPI
+      startBlock: 24654652
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - ApiAdded
+        - AteFromQuota
+        - PlanAdded
+        - PlanDeactivated
+        - Subscribed
+        - Unsubscribed
+      abis:
+        - name: PayMyAPI
+          file: PayMyAPI/abis/PayMyAPI.json
+      eventHandlers:
+        - event: ApiAdded(address,string,string)
+          handler: handleApiAdded
+        - event: AteFromQuota(address,address,uint256)
+          handler: handleAteFromQuota
+        - event: PlanAdded(address,int96,uint256,uint256)
+          handler: handlePlanAdded
+        - event: PlanDeactivated(address,uint256)
+          handler: handlePlanDeactivated
+        - event: Subscribed(address,address,uint256)
+          handler: handleSubscribed
+        - event: Unsubscribed(address,address)
+          handler: handleUnsubscribed
+      file: PayMyAPI/PayMyAPI.wasm
