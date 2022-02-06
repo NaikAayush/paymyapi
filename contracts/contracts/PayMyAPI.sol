@@ -78,7 +78,7 @@ contract PayMyAPI is ChainlinkClient, KeeperCompatibleInterface {
         address link,
         address oracle,
         uint256 updateInterval,
-        bytes32 chainlinkJobId_,
+        string memory chainlinkJobId_,
         uint256 chainlinkFee_
     ) {
         //initialize InitData struct, and set equal to cfaV1
@@ -103,7 +103,7 @@ contract PayMyAPI is ChainlinkClient, KeeperCompatibleInterface {
         interval = updateInterval;
         lastTimeStamp = block.timestamp;
 
-        chainlinkJobId = chainlinkJobId_;
+        chainlinkJobId = stringToBytes32(chainlinkJobId_);
         chainlinkFee = chainlinkFee_;
     }
 
@@ -237,7 +237,9 @@ contract PayMyAPI is ChainlinkClient, KeeperCompatibleInterface {
         AteFromQuota(developer, user, count);
     }
 
-    function checkUpkeep(bytes calldata /* checkData */)
+    function checkUpkeep(
+        bytes calldata /* checkData */
+    )
         external
         view
         override
@@ -247,7 +249,9 @@ contract PayMyAPI is ChainlinkClient, KeeperCompatibleInterface {
         performData = "0x";
     }
 
-    function performUpkeep(bytes calldata /* performData */) external override {
+    function performUpkeep(
+        bytes calldata /* performData */
+    ) external override {
         lastTimeStamp = block.timestamp;
 
         uint256 numDevs = developers.length;
@@ -303,5 +307,21 @@ contract PayMyAPI is ChainlinkClient, KeeperCompatibleInterface {
         );
 
         return sendChainlinkRequest(request, chainlinkFee);
+    }
+
+    function stringToBytes32(string memory source)
+        private
+        pure
+        returns (bytes32 result)
+    {
+        bytes memory tempEmptyStringTest = bytes(source);
+        if (tempEmptyStringTest.length == 0) {
+            return 0x0;
+        }
+
+        assembly {
+            // solhint-disable-line no-inline-assembly
+            result := mload(add(source, 32))
+        }
     }
 }

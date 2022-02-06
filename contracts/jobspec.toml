@@ -1,0 +1,47 @@
+type            = "directrequest"
+schemaVersion   = 1
+contractAddress     = "0xD67C2358A202eCFad7A9DF124a56e3d1efa478c4"
+# Optional externalJobID: Automatically generated if unspecified
+# externalJobID   = "0EEC7E1D-D0D2-476C-A1A8-72DFB6633F46"
+observationSource   = """
+// First, we parse the request log and the CBOR payload inside of it
+decode_log   [type="ethabidecodelog"
+              abi="OracleRequest(bytes32 indexed specId, address requester, bytes32 requestId, uint256 payment, address callbackAddr, bytes4 callbackFunctionId, uint256 cancelExpiration, uint256 dataVersion, bytes data)"
+              data="$(jobRun.logData)"
+              topics="$(jobRun.logTopics)"]
+decode_cbor  [type="cborparse" data="$(decode_log.data)"]
+
+fetch [type="http" method=GET url="$(decode_cbor.get)"]
+
+decode_log -> decode_cbor -> fetch
+
+fetch -> dev_parse
+fetch -> user_parse
+fetch -> count_parse
+
+// Then, we use the decoded request parameters to make an HTTP fetch
+dev_parse [type="jsonparse" path="developer" data="$(fetch)"]
+user_parse [type="jsonparse" path="user" data="$(fetch)"]
+count_parse [type="jsonparse" path="count" data="$(fetch)"]
+
+dev_parse -> encode_response
+user_parse -> encode_response
+count_parse -> encode_response
+
+// Finally, we send a response on-chain.
+// Note that single-word responses automatically populate
+// the requestId.
+encode_response [type="ethabiencode"
+                 abi="(bytes32 requestId, address developer, address user, uint256 count)"
+                 data="{\\"requestId\\": $(decode_log.requestId), \\"developer\\": $(dev_parse), \\"user\\": $(user_parse), \\"count\\": $(count_parse)}"
+                ]
+
+    encode_tx  [type="ethabiencode"
+                abi="fulfillOracleRequest2(bytes32 requestId, uint256 payment, address callbackAddress, bytes4 callbackFunctionId, uint256 expiration, bytes calldata data)"
+                data="{\\"requestId\\": $(decode_log.requestId), \\"payment\\":   $(decode_log.payment), \\"callbackAddress\\": $(decode_log.callbackAddr), \\"callbackFunctionId\\": $(decode_log.callbackFunctionId), \\"expiration\\": $(decode_log.cancelExpiration), \\"data\\": $(encode_mwr)}"
+                ]
+
+submit_tx  [type="ethtx" to="0xD67C2358A202eCFad7A9DF124a56e3d1efa478c4" data="$(encode_tx)"]
+
+encode_response -> encode_tx -> submit_tx
+"""
