@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BigNumber, ContractInterface, ethers, utils } from 'ethers';
+import { BigNumber, ContractInterface, ethers, Signer, utils } from 'ethers';
 declare let window: any;
 
 @Injectable({
@@ -7,7 +7,7 @@ declare let window: any;
 })
 export class EthersService {
   provider: any;
-  signer: any;
+  signer?: Signer;
   utils = utils;
 
   constructor() {
@@ -29,6 +29,14 @@ export class EthersService {
       this.initEthers();
     }
     return accounts.length > 0;
+  }
+
+  async signMessage(message: string) {
+    let messageHash = ethers.utils.solidityKeccak256(['string'], [message]);
+    const signature = await this.signer?.signMessage(
+      ethers.utils.arrayify(messageHash)
+    );
+    return signature;
   }
 
   async decodeData(typesArray: Array<string>, raw_log_data: string) {
