@@ -62,18 +62,24 @@ export function handleSubscribed(event: Subscribed): void {
 
   let owner = event.params.developer.toHexString();
   let apiRecord = ApiRecord.load(owner);
-  let planRecord: PlanRecord = (apiRecord?.plans[
-    event.params.planIndex.toI64()
-  ] as unknown) as PlanRecord;
+  if (apiRecord === null) {
+    return;
+  }
+  let planRecord = PlanRecord.load(apiRecord.plans[
+    event.params.planIndex.toI32()
+  ]);
+  if (planRecord === null) {
+    return;
+  }
 
   statusRecord.remainingQuota = planRecord.perMonthLimit;
   statusRecord.planId = event.params.planIndex;
   statusRecord.active = true;
-  userSubscription.status = (statusRecord as unknown) as string;
+  userSubscription.status = statusRecord.id;
 
   let subscriptions = new Subscriptions(event.params.developer.toHexString());
   subscriptions.owner = event.params.developer.toHexString();
-  subscriptions.subscribers.push((userSubscription as unknown) as string);
+  subscriptions.subscribers.push(userSubscription.id);
 
   userSubscription.save();
   statusRecord.save();
