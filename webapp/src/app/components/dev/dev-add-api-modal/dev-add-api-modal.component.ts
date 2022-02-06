@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ContractService } from 'src/app/services/contract/contract.service';
 import { ModalService } from 'src/app/services/modal/modal.service';
 
 @Component({
@@ -10,13 +11,15 @@ export class DevAddApiModalComponent implements OnInit {
   loading: boolean = false;
   message: string = '';
   api_url: string = '';
-  constructor(public modal: ModalService) {}
+  constructor(public modal: ModalService, private contract: ContractService) {}
 
   ngOnInit(): void {}
 
-  addAPI() {
-    alert([this.message, this.api_url]);
+  async addAPI() {
     this.loading = true;
+    await this.contract.addAPI(this.message, this.api_url);
+    this.loading = false;
+    this.modal.addNewAPIModal = false;
   }
 
   cancel() {

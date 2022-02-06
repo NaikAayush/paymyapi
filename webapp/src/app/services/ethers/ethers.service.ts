@@ -60,4 +60,9 @@ export class EthersService {
   fromWei(amount: BigNumber) {
     return this.utils.formatEther(amount).toString();
   }
+
+  async initSignerContract(contractAddress: string, abi: ContractInterface) {
+    await this.initEthers();
+    return new ethers.Contract(contractAddress, abi, this.signer);
+  }
 }

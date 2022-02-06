@@ -12,6 +12,7 @@ import { DevNavbarComponent } from './components/dev/dev-navbar/dev-navbar.compo
 import { DevEmptyStateComponent } from './components/dev/dev-empty-state/dev-empty-state.component';
 import { DevAddApiModalComponent } from './components/dev/dev-add-api-modal/dev-add-api-modal.component';
 import { LoaderComponent } from './components/loader/loader.component';
+import { ToastComponent } from './components/toast/toast.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { LoaderComponent } from './components/loader/loader.component';
     DevEmptyStateComponent,
     DevAddApiModalComponent,
     LoaderComponent,
+    ToastComponent,
   ],
   imports: [
     BrowserModule,
