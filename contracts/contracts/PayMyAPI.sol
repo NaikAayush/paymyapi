@@ -72,6 +72,8 @@ contract PayMyAPI is ChainlinkClient, KeeperCompatibleInterface {
     bytes32 public chainlinkJobId;
     uint256 public chainlinkFee;
 
+    address owner;
+
     constructor(
         ISuperfluid host,
         ISuperfluidToken token_,
@@ -105,6 +107,44 @@ contract PayMyAPI is ChainlinkClient, KeeperCompatibleInterface {
 
         chainlinkJobId = stringToBytes32(chainlinkJobId_);
         chainlinkFee = chainlinkFee_;
+
+        owner = msg.sender;
+    }
+
+    modifier _ownerOnly() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function updateChainLinkJobId(string calldata chainlinkJobId_)
+        public
+        _ownerOnly
+    {
+        chainlinkJobId = stringToBytes32(chainlinkJobId_);
+    }
+
+    function updateChainLinkFee(uint256 chainlinkFee_) public _ownerOnly {
+        chainlinkFee = chainlinkFee_;
+    }
+
+//     function updateChainLinkInterval(uint256 updateInterval) public _ownerOnly {
+//         interval = updateInterval;
+//     }
+
+    function updateChainLinkToken(address link) public _ownerOnly {
+        setChainlinkToken(link);
+    }
+
+    function updateChainLinkOracle(address oracle) public _ownerOnly {
+        setChainlinkOracle(oracle);
+    }
+
+    function updateSuperfluidToken(ISuperfluidToken token_) public _ownerOnly {
+        token = token_;
+    }
+
+    function updateLastTimestamp(uint256 timestamp) public _ownerOnly {
+        lastTimeStamp = block.timestamp;
     }
 
     function addApi(string calldata message, string calldata url) public {
