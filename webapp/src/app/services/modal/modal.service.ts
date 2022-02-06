@@ -5,5 +5,6 @@ import { Injectable } from '@angular/core';
 })
 export class ModalService {
   addNewAPIModal: boolean = false;
+  addNewPlanModal: boolean = false;
   constructor() {}
 }

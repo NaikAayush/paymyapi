@@ -1,0 +1,41 @@
+<div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+        <div class="inline-block align-bottom bg-white dark:bg-slate-900 rounded-lg p-10 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-10">
+            <div>
+                <div class="text-center">
+                    <h3 class="text-2xl leading-6 font-semibold text-gray-900 dark:text-white" id="modal-title">Add new Plan</h3>
+
+                    <div class="flex flex-col items-center w-full mt-8 gap-4">
+                        <div class="flex flex-col items-start text-left">
+                            <label for="perMonthLimit" class="block text-sm font-medium text-gray-700 dark:text-gray-400">API Requests Per Month</label>
+                            <div class="mt-2">
+                                <input [(ngModel)]="perMonthLimit" type="text" name="perMonthLimit" id="perMonthLimit" class="h-12 dark:text-gray-300 bg-slate-700 shadow focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-base border-slate-700 rounded-xl" placeholder="1000">
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-start text-left">
+                            <label for="pricePerMonth" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Pricing Per Month in USDC</label>
+                            <div class="mt-2">
+                                <input [(ngModel)]="pricePerMonth" type="text" name="pricePerMonth" id="pricePerMonth" class="h-12 dark:text-gray-300 bg-slate-700 shadow focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-base border-slate-700 rounded-xl" placeholder="10">
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-start text-left">
+                            <label for="perSecondLimit" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Rate Limit Per Second</label>
+                            <div class="mt-2">
+                                <input [(ngModel)]="perSecondLimit" type="text" name="perSecondLimit" id="perSecondLimit" class="h-12 dark:text-gray-300 bg-slate-700 shadow focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-base border-slate-700 rounded-xl" placeholder="2">
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <button (click)="cancel()" type="button" class="mt-4 justify-center rounded-xl border border-transparent shadow-sm px-6 py-3 bg-gray-600 text-base font-medium text-white hover:bg-gray-700 sm:col-start-2 sm:text-sm">Cancel</button>
+                            <button (click)="addPlan()" type="button" class="mt-4 justify-center rounded-xl border border-transparent shadow-sm px-6 py-3 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 sm:col-start-2 sm:text-sm">Add API</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-loader *ngIf="loading"></app-loader>

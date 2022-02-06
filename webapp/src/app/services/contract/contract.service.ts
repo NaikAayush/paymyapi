@@ -36,4 +36,29 @@ export class ContractService {
     const tx = await this.payMyAPIContract.addApi(message, url);
     await tx.wait();
   }
+
+  async addPlan(
+    pricePerSecond: number,
+    perMonthLimit: number,
+    perSecondLimit: number
+  ) {
+    await this.initContracts();
+    this.account = await this.ethersService.provider.send(
+      'eth_requestAccounts',
+      []
+    );
+    // console.log(this.account[0]);
+    // console.log(this.ethersService.utils.parseEther(amount).toString());
+    // const tx = await this.rupyaSignerContract.approve(
+    //   environment.stakeContractAddress,
+    //   this.ethersService.utils.parseEther(amount).toString()
+    // );
+    // await tx.wait();
+    const tx = await this.payMyAPIContract.addPlan(
+      pricePerSecond,
+      perMonthLimit,
+      perSecondLimit
+    );
+    await tx.wait();
+  }
 }

@@ -14,6 +14,18 @@ import { DevAddApiModalComponent } from './components/dev/dev-add-api-modal/dev-
 import { LoaderComponent } from './components/loader/loader.component';
 import { ToastComponent } from './components/toast/toast.component';
 
+import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
+import { APOLLO_OPTIONS } from 'apollo-angular';
+import { DevApiListComponent } from './components/dev/dev-api-list/dev-api-list.component';
+import { DevAddPlanComponent } from './components/dev/dev-add-plan/dev-add-plan.component';
+
+function createApollo(): ApolloClientOptions<unknown> {
+  return {
+    uri: 'https://api.thegraph.com/subgraphs/name/naikaayush/paymyapi',
+    cache: new InMemoryCache(),
+  };
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,6 +37,8 @@ import { ToastComponent } from './components/toast/toast.component';
     DevAddApiModalComponent,
     LoaderComponent,
     ToastComponent,
+    DevApiListComponent,
+    DevAddPlanComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,7 +46,7 @@ import { ToastComponent } from './components/toast/toast.component';
     BrowserAnimationsModule,
     FormsModule,
   ],
-  providers: [],
+  providers: [{ provide: APOLLO_OPTIONS, useFactory: createApollo }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
