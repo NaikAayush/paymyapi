@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./cover-api.png" />
+</p>
+
 # PayMyAPI
 
 A Zero-code, self serve platform to monetize your Web2 APIs using crypto, protect them with authentication and rate limits AND get a bonus dashboard to monitor them.
