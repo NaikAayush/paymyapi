@@ -25,7 +25,7 @@ export class ApiDashboardComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id');
     this.loading = true;
     const add: string = await this.ethersService.getAddress();
-    this.result = await this.graph.getAPIs(add.toLowerCase());
+    this.result = await this.graph.getAPIs(this.id.toLowerCase());
     if (this.result?.data.apiRecords.length > 0) {
       this.apiExist = true;
     }

@@ -3,7 +3,7 @@
         <app-dev-navbar class="bg-white  dark:bg-slate-900 flex w-screen justify-center items-center"></app-dev-navbar>
     </header>
     <main class="flex flex-col flex-1 w-screen overflow-y-auto p-5 bg-white dark:bg-slate-900 items-center">
-        <app-api-list-plans *ngIf="apiExist" [data]="result.data.apiRecords[0].plans"></app-api-list-plans>
+        <app-api-list-plans *ngIf="apiExist" [data]="result.data.apiRecords[0].plans" [message]="result.data.apiRecords[0].message"></app-api-list-plans>
         <!-- <app-dev-empty-state *ngIf="!apiExist"></app-dev-empty-state>
         <app-dev-api-list *ngIf="apiExist" [data]="result.data.apiRecords[0]"></app-dev-api-list> -->
     </main>

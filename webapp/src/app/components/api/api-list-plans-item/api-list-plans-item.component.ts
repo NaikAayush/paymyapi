@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ContractService } from 'src/app/services/contract/contract.service';
 import { EthersService } from 'src/app/services/ethers/ethers.service';
+import { ModalService } from 'src/app/services/modal/modal.service';
 import { SuperfluidService } from 'src/app/services/superfluid/superfluid.service';
 
 @Component({
@@ -13,12 +14,14 @@ export class ApiListPlansItemComponent implements OnInit {
   @Input() data: any;
   @Input() idx: any;
   monthlyAmount: any;
+  @Input() message: any;
   loading: boolean = false;
   constructor(
     private route: ActivatedRoute,
     private ethersService: EthersService,
     private contract: ContractService,
-    private superfluid: SuperfluidService
+    private superfluid: SuperfluidService,
+    public modal: ModalService
   ) {}
 
   ngOnInit() {
@@ -36,7 +39,7 @@ export class ApiListPlansItemComponent implements OnInit {
 
   async buy() {
     this.loading = true;
-    this.superfluid.startFlow(
+    await this.superfluid.startFlow(
       await this.ethersService.getAddress(),
       this.route.snapshot.paramMap.get('id') as string,
       this.data.pricePerSecond
@@ -45,6 +48,6 @@ export class ApiListPlansItemComponent implements OnInit {
     await this.contract.subscribe(id as string, this.idx);
 
     this.loading = false;
-    // this.modal.addNewPlanModal = false;
+    this.modal.generateTokenModal = true;
   }
 }

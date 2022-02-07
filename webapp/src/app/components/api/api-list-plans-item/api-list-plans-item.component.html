@@ -23,4 +23,5 @@
         Rate Limit Per Second: {{data.perSecondLimit}}
     </p>
 </div>
-<app-loader *nfIf="loading"></app-loader>
+<app-loader *ngIf="loading"></app-loader>
+<app-api-generate-token *ngIf="modal.generateTokenModal" [message]="message"></app-api-generate-token>

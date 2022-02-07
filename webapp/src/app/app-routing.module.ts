@@ -4,6 +4,7 @@ import { ApiDashboardComponent } from './components/api/api-dashboard/api-dashbo
 import { DevDashboardComponent } from './components/dev/dev-dashboard/dev-dashboard.component';
 
 const routes: Routes = [
+  { path: '', component: DevDashboardComponent },
   { path: 'dev', component: DevDashboardComponent },
   { path: 'api/:id', component: ApiDashboardComponent },
 ];

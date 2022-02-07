@@ -20,6 +20,7 @@ import { DevApiListComponent } from './components/dev/dev-api-list/dev-api-list.
 import { DevAddPlanComponent } from './components/dev/dev-add-plan/dev-add-plan.component';
 import { ApiListPlansComponent } from './components/api/api-list-plans/api-list-plans.component';
 import { ApiListPlansItemComponent } from './components/api/api-list-plans-item/api-list-plans-item.component';
+import { ApiGenerateTokenComponent } from './components/api/api-generate-token/api-generate-token.component';
 
 function createApollo(): ApolloClientOptions<unknown> {
   return {
@@ -43,6 +44,7 @@ function createApollo(): ApolloClientOptions<unknown> {
     DevAddPlanComponent,
     ApiListPlansComponent,
     ApiListPlansItemComponent,
+    ApiGenerateTokenComponent,
   ],
   imports: [
     BrowserModule,

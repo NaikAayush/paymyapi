@@ -9,6 +9,7 @@ import { EthersService } from 'src/app/services/ethers/ethers.service';
 })
 export class ApiListPlansComponent implements OnInit {
   @Input() data: any;
+  @Input() message: any;
   @Input() idx: number | undefined;
   constructor(private ethersService: EthersService) {}
 

@@ -1,0 +1,37 @@
+<div class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+        <div class="inline-block align-bottom bg-white dark:bg-slate-900 rounded-lg p-10 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-10">
+            <div>
+                <div class="text-center">
+                    <h3 class="text-2xl leading-6 font-semibold text-gray-900 dark:text-white" id="modal-title">Generate API Key</h3>
+
+                    <div class="flex flex-col items-center w-full mt-8 gap-4">
+                        <!-- <div class="flex flex-col items-start text-left">
+                            <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-400">Encryption Message</label>
+                            <div class="mt-2">
+                                <input type="text" name="message" id="message" class="h-12 dark:text-gray-300 bg-slate-700 shadow focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-base border-slate-700 rounded-xl" placeholder="secure-passphrase">
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-start text-left">
+                            <label for="api_url" class="block text-sm font-medium text-gray-700 dark:text-gray-400">API URL</label>
+                            <div class="mt-2">
+                                <input type="text" name="api_url" id="api_url" class="h-12 dark:text-gray-300 bg-slate-700 shadow focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-base border-slate-700 rounded-xl" placeholder="https://example.com/api/">
+                            </div>
+                        </div> -->
+                        <div class="flex gap-4">
+                            <button (click)="sign()" type="button" class="mt-4 justify-center rounded-xl border border-transparent shadow-sm px-6 py-3 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 sm:col-start-2 sm:text-sm">SIGN</button>
+                        </div>
+                        <div class="text-white text-base font-medium">
+                            {{key}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-loader *ngIf="loading"></app-loader>
