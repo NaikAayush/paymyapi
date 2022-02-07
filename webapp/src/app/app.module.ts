@@ -18,6 +18,8 @@ import { ApolloClientOptions, InMemoryCache } from '@apollo/client/core';
 import { APOLLO_OPTIONS } from 'apollo-angular';
 import { DevApiListComponent } from './components/dev/dev-api-list/dev-api-list.component';
 import { DevAddPlanComponent } from './components/dev/dev-add-plan/dev-add-plan.component';
+import { ApiListPlansComponent } from './components/api/api-list-plans/api-list-plans.component';
+import { ApiListPlansItemComponent } from './components/api/api-list-plans-item/api-list-plans-item.component';
 
 function createApollo(): ApolloClientOptions<unknown> {
   return {
@@ -39,6 +41,8 @@ function createApollo(): ApolloClientOptions<unknown> {
     ToastComponent,
     DevApiListComponent,
     DevAddPlanComponent,
+    ApiListPlansComponent,
+    ApiListPlansItemComponent,
   ],
   imports: [
     BrowserModule,

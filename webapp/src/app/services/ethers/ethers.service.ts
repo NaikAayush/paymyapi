@@ -57,7 +57,7 @@ export class EthersService {
     return this.utils.parseEther(amount).toString();
   }
 
-  fromWei(amount: BigNumber) {
+  fromWei(amount: any) {
     return this.utils.formatEther(amount).toString();
   }
 

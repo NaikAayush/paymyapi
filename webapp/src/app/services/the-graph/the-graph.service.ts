@@ -16,10 +16,18 @@ export class TheGraphService {
         available
         message
         url
-        plans
+        plans {
+          id
+          owner
+          pricePerSecond
+          perMonthLimit
+          perSecondLimit
+          active
+        }
       }
     }
   `;
+
   GET_OTHERS_RECORD = gql`
     query GetRecords($address: [String!]) {
       medicalRecords(where: { hasAccess_contains: $address }) {
